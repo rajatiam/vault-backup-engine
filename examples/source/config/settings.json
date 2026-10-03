@@ -1,0 +1,4 @@
+{
+  "service": "demo-service",
+  "replicas": 2
+}

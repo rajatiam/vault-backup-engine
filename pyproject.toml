@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vault-backup-engine"
+version = "1.0.0"
+description = "Content-addressed snapshots, integrity verification and safe restore"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+vault-backup-engine = "vault_backup_engine:entrypoint"
+
+[tool.setuptools.packages.find]
+include = ["vault_backup_engine*"]
