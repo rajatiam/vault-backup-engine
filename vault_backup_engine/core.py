@@ -120,3 +120,21 @@ def restore(vault, name, target):
                 out.write(read_blob(vault, item["sha256"]))
         os.rename(staging, target)
     return {"restored": str(target), "files": len(manifest["files"])}
+
+
+def compare(vault, before, after):
+    old = {
+        item["path"]: item["sha256"] for item in load_manifest(vault, before)["files"]
+    }
+    new = {
+        item["path"]: item["sha256"] for item in load_manifest(vault, after)["files"]
+    }
+    return {
+        "before": before,
+        "after": after,
+        "added": sorted(new.keys() - old.keys()),
+        "removed": sorted(old.keys() - new.keys()),
+        "changed": sorted(
+            key for key in old.keys() & new.keys() if old[key] != new[key]
+        ),
+    }

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vault-backup-engine"
-version = "1.0.0"
+version = "1.1.0"
 description = "Content-addressed snapshots, integrity verification and safe restore"
 requires-python = ">=3.11"
 dependencies = []

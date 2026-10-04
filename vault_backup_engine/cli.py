@@ -1,31 +1,33 @@
 import argparse, json
-from .core import snapshot, verify, restore
+from .core import snapshot, verify, restore, compare
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
-        description="Content-addressed backup snapshots and verified restores"
+        description="Verified backups, restores and snapshot comparisons"
     )
     commands = parser.add_subparsers(dest="command", required=True)
-    create = commands.add_parser("snapshot")
-    create.add_argument("source")
-    create.add_argument("vault")
-    create.add_argument("--name", required=True)
-    check = commands.add_parser("verify")
-    check.add_argument("vault")
-    check.add_argument("name")
-    recover = commands.add_parser("restore")
-    recover.add_argument("vault")
-    recover.add_argument("name")
-    recover.add_argument("target")
+    sub = commands.add_parser("snapshot")
+    sub.add_argument("source")
+    sub.add_argument("vault")
+    sub.add_argument("--name", required=True)
+    for name in ["verify", "restore"]:
+        sub = commands.add_parser(name)
+        sub.add_argument("vault")
+        sub.add_argument("name")
+        if name == "restore":
+            sub.add_argument("target")
+    sub = commands.add_parser("compare")
+    sub.add_argument("vault")
+    sub.add_argument("before")
+    sub.add_argument("after")
     args = parser.parse_args(argv)
-    result = (
-        snapshot(args.source, args.vault, args.name)
-        if args.command == "snapshot"
-        else (
-            verify(args.vault, args.name)
-            if args.command == "verify"
-            else restore(args.vault, args.name, args.target)
-        )
-    )
+    if args.command == "snapshot":
+        result = snapshot(args.source, args.vault, args.name)
+    elif args.command == "verify":
+        result = verify(args.vault, args.name)
+    elif args.command == "restore":
+        result = restore(args.vault, args.name, args.target)
+    else:
+        result = compare(args.vault, args.before, args.after)
     print(json.dumps(result, indent=2))

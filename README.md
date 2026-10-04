@@ -36,3 +36,14 @@ Business algorithms live in `vault_backup_engine/core.py`; `vault_backup_engine/
 Snapshots are gzip-compressed and SHA-256 addressed, not encrypted. Keep sensitive backups on encrypted storage. Symlinks are rejected; existing restore files are never overwritten.
 
 This project demonstrates implemented engineering practices. It does not claim production deployment history or external certifications.
+
+## Snapshot comparison
+
+Compare two snapshot manifests without restoring data. The report identifies added, removed and content-changed paths.
+
+```sh
+python -m vault_backup_engine snapshot examples/source examples/vault --name second
+python -m vault_backup_engine compare examples/vault first second
+```
+
+Create the named input snapshots, databases or plan files first using the existing commands above.
